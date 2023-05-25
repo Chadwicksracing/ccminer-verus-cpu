@@ -1,20 +1,17 @@
 #!/usr/bin/env bash
 
-[[ `ps aux | grep "./ccminer" | grep -v grep | wc -l` != 0 ]] &&
-	echo -e "${RED}$MINER_NAME miner is already running${NOCOLOR}" &&
-	exit 1
+[[ `ps aux | grep "ccminer-cpu" | grep -v grep | wc -l` != 0 ]] &&
+  echo -e "${RED}$CUSTOM_NAME miner is already running${NOCOLOR}" &&
+  exit 1
 
-#try to release TIME_WAIT sockets
-while true; do
-	for con in `netstat -anp | grep TIME_WAIT | grep $MINER_API_PORT | awk '{print $5}'`; do
-		killcx $con lo
-	done
-	netstat -anp | grep TIME_WAIT | grep $MINER_API_PORT &&
-		continue ||
-		break
-done
+. h-manifest.conf
 
+unset LD_LIBRARY_PATH
 
-cd $MINER_DIR/$MINER_FORK/$MINER_VER
-[[ -e $MINER_DIR/$MINER_FORK/$MINER_VER/h-local.conf ]] && source $MINER_DIR/$MINER_FORK/$MINER_VER/h-local.conf
-./ccminer-cpu -c pools.conf 2>&1 | tee --append ${MINER_LOG_BASENAME}.log
+conf=`cat $MINER_CONFIG_FILENAME`
+
+if [[ $conf=~';' ]]; then
+    conf=`echo $conf | tr -d '\'`
+fi
+
+./ccminer-cpu ${conf//;/'\;'} --max-temp=85 -b 0.0.0.0:$MINER_API_PORT  2>&1 | tee --append $CUSTOM_LOG_BASENAME.log
