@@ -14,4 +14,4 @@ if [[ $conf=~';' ]]; then
     conf=`echo $conf | tr -d '\'`
 fi
 
-./ccminer-cpu ${conf//;/'\;'} --max-temp=85 -b 0.0.0.0:$MINER_API_PORT  2>&1 | tee --append $CUSTOM_LOG_BASENAME.log
+./${$CUSTOM_VERSION}/ccminer-cpu ${conf//;/'\;'} --max-temp=85 -b 0.0.0.0:$MINER_API_PORT  2>&1 | tee --append $CUSTOM_LOG_BASENAME.log
