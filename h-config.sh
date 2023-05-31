@@ -11,7 +11,7 @@ threadcount=$CPU_CORES
 conf=" -a verus -o $CUSTOM_URL -u $CUSTOM_TEMPLATE -p $CUSTOM_PASS -t $threadcount "
 
 # Add user options from hive
-conf+=" ${CUSTOM_USER_CONFIG}"
+conf+="${CUSTOM_USER_CONFIG}"
 
 [[ -z $CUSTOM_CONFIG_FILENAME ]] && echo -e "${RED}No CUSTOM_CONFIG_FILENAME is set${NOCOLOR}" && return 1
 echo "$conf" > $CUSTOM_CONFIG_FILENAME
